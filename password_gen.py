@@ -10,7 +10,7 @@ def save_pass(account , pass_detaill):
 	cr.execute("SELECT password FROM PASSWORD")
 	all_passwords = cr.fetchall()
 	if pass_detaill in all_passwords:
-		print("\nyour password saved succefully")
+		print("\nyour password saved successfully")
 	db.commit()
 	print(pass_detaill)
 
@@ -38,7 +38,7 @@ def delete_pass():
 			cr.execute(f"SELECT password FROM PASSWORD")
 			refreshed_res = cr.fetchall()
 			if selected not in refreshed_res :
-				print("\nThe Password Deleted Succefully")
+				print("\nThe Password Deleted Successfully")
 				time.sleep(2)
 				break
 
@@ -92,7 +92,7 @@ def own_password():
 				cr.execute("SELECT password FROM PASSWORD")
 				refreshed_passwords = cr.fetchall()
 				if account_input in refreshed_accounts or password_input in refreshed_passwords:
-					print("Password Succefully saved")
+					print("Password Successfully saved")
 					time.sleep(3)
 					break
 				else:
