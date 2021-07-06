@@ -4,13 +4,6 @@ import sqlite3
 import time
 import pandas as pn
 
-def select_data():
-	cr.execute("SELECT password From PASSWORD")
-	passes = cr.fetchall
-	cr.execute("SELECT account From PASSWORD")
-	all_accounts = cr.fetchall()
-	data_list = [passes , all_accounts]
-	return data_list
 
 def save_pass(account , pass_detaill):
 	cr.execute(f"INSERT INTO PASSWORD values('{account}' , '{pass_detaill}')")
