@@ -6,7 +6,7 @@ import pandas as pn
 
 
 def save_pass(account , pass_detaill):
-	cr.execute(f"INSERT INTO PASSWORD values('{account}' , '{pass_detaill}')")
+	cr.execute(f"INSERT INTO PASSWORD values(? , ?)" , (account , pass_detaill))
 	cr.execute("SELECT password FROM PASSWORD")
 	all_passwords = cr.fetchall()
 	if pass_detaill in all_passwords:
@@ -33,9 +33,9 @@ def delete_pass():
 	for key in names_nums.keys():
 		if int(select_input) == key:
 			selected = names_nums.get(key)
-			cr.execute(f"DELETE FROM PASSWORD where account = '{selected}'")
+			cr.execute("DELETE FROM PASSWORD where account = ? " , (selected))
 			db.commit()
-			cr.execute(f"SELECT password FROM PASSWORD")
+			cr.execute("SELECT password FROM PASSWORD")
 			refreshed_res = cr.fetchall()
 			if selected not in refreshed_res :
 				print("\nThe Password Deleted Successfully")
@@ -53,7 +53,7 @@ def select_pass():
 	for key in names_nums.keys():
 		if int(select_input) == key:
 			selected = names_nums.get(key)
-			cr.execute(f"SELECT password FROM PASSWORD where account = '{selected}'")
+			cr.execute("SELECT password FROM PASSWORD where account = ? " , (selected))
 			print(cr.fetchone())
 			input("Press any key to exit : ")
 			break
