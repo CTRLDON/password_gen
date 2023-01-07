@@ -1,12 +1,13 @@
 import random
-import string
 import sqlite3
+import string
 import time
+
 import pandas as pn
 
 
 def save_pass(account , pass_detaill):
-	cr.execute(f"INSERT INTO PASSWORD values(? , ?)" , (account , pass_detaill))
+	cr.execute(f"INSERT INTO PASSWORD values(? , ?)", (account, pass_detaill))
 	cr.execute("SELECT password FROM PASSWORD")
 	all_passwords = cr.fetchall()
 	if pass_detaill in all_passwords:
@@ -26,21 +27,18 @@ def delete_pass():
 	cr.execute("SELECT account FROM PASSWORD")
 	accounts_res = cr.fetchall()
 	names_nums = {}
-	for num , name in enumerate(accounts_res):
-			names_nums[num] = name
-			print(f"{num} for {name}")
+	for num, name in enumerate(accounts_res):
+		names_nums[num] = name
+		print(f"{num} for {name}")
 	select_input = input("what do you want to delete : ")
-	for key in names_nums.keys():
-		if int(select_input) == key:
-			selected = names_nums.get(key)
-			cr.execute("DELETE FROM PASSWORD where account = ? " , (selected))
-			db.commit()
-			cr.execute("SELECT password FROM PASSWORD")
-			refreshed_res = cr.fetchall()
-			if selected not in refreshed_res :
-				print("\nThe Password Deleted Successfully")
-				time.sleep(2)
-				break
+	selected = names_nums.get(int(select_input))
+	cr.execute("DELETE FROM PASSWORD where account = ? ", (selected,))
+	db.commit()
+	cr.execute("SELECT password FROM PASSWORD")
+	refreshed_res = cr.fetchall()
+	if selected not in refreshed_res:
+		print("\nThe Password Deleted Successfully")
+		time.sleep(2)
 
 def select_pass():
 	cr.execute("SELECT account FROM PASSWORD")
@@ -50,13 +48,17 @@ def select_pass():
 			names_nums[num] = name
 			print(f"{num} for {name}")
 	select_input = input("what do you want to select : ")
-	for key in names_nums.keys():
-		if int(select_input) == key:
-			selected = names_nums.get(key)
-			cr.execute("SELECT password FROM PASSWORD where account = ? " , (selected))
-			print(cr.fetchone())
-			input("Press any key to exit : ")
-			break
+	selected = names_nums.get(int(select_input))
+	cr.execute("SELECT password FROM PASSWORD where account = ? ", (selected,))
+	print(cr.fetchone())
+	input("Press any key to exit : ")
+	# for key in names_nums.keys():
+	# 	if int(select_input) == key:
+	# 		selected = names_nums.get(key)
+	# 		cr.execute("SELECT password FROM PASSWORD where account = ? " , (selected))
+	# 		print(cr.fetchone())
+	# 		input("Press any key to exit : ")
+	# 		break
 
 def select_all():
 	cr.execute("SELECT password FROM PASSWORD")
@@ -76,30 +78,26 @@ def own_password():
 	account_input = input("this password for which account? : ")
 	cr.execute("SELECT account FROM PASSWORD")
 	all_accounts = cr.fetchall()
-	cr.execute("SELECT password FROM PASSWORD")
-	all_passwords = cr.fetchall()
-	for account in all_accounts:
-		for password in all_passwords:
-			if account == account_input or password == password_input:
-				print("account name or password is already exists , try again")
+	if len(all_accounts) != 0:
+		for account in all_accounts:
+			if account == account_input:
+				print("account name is already exists , try again")
 				time.sleep(2)
-				break
-			else:
-				cr.execute(f"INSERT INTO PASSWORD values('{account_input}' , '{password_input}')")
-				db.commit()
-				cr.execute("SELECT account FROM PASSWORD")
-				refreshed_accounts = cr.fetchall()
-				cr.execute("SELECT password FROM PASSWORD")
-				refreshed_passwords = cr.fetchall()
-				if account_input in refreshed_accounts or password_input in refreshed_passwords:
-					print("Password Successfully saved")
-					time.sleep(3)
-					break
-				else:
-					print("oh , there is a problem try again")
-					time.sleep(2)
-					break
-		break
+				own_password()
+	print("Running")
+	cr.execute(f"INSERT INTO PASSWORD values('{account_input}' , '{password_input}')")
+	db.commit()
+	cr.execute("SELECT account FROM PASSWORD")
+	refreshed_accounts = cr.fetchall()
+	cr.execute("SELECT password FROM PASSWORD")
+	refreshed_passwords = cr.fetchall()
+	if account_input in refreshed_accounts or password_input in refreshed_passwords:
+		print("Password Successfully saved")
+		time.sleep(3)
+	else:
+		print("oh , there is a problem try again")
+		time.sleep(2)
+		own_password()
 
 
 db = sqlite3.connect("passwords.db")
